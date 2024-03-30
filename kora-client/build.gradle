@@ -1,0 +1,27 @@
+
+bootJar { // bootJar 끄기
+    enabled = false
+}
+
+jar { // jar 설정 켜기
+    enabled = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    dependencies {
+
+    }
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
