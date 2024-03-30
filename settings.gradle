@@ -1,1 +1,3 @@
 rootProject.name = 'kora-server'
+include 'kora-api'
+include 'kora-domain'

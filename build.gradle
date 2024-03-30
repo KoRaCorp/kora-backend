@@ -4,37 +4,55 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.3'
 }
 
-group = 'corp'
-version = '0.0.1-SNAPSHOT'
 
-java {
-	sourceCompatibility = '17'
+bootJar {
+	enabled = false
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+jar {
+	enabled = true
+}
+
+
+// setting.gradle에 inclued된 프로젝트 전부를 관리한다.
+subprojects {
+	group = 'corp'
+	version = '0.0.1-SNAPSHOT'
+	sourceCompatibility = '17'
+
+	repositories {
+		mavenCentral()
+	}
+
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	// 롬복은 공통적으로 사용하는 의존성이니 여기서 끌어다 사용
+	dependencies {
+		/**
+		 * lombok
+		 */
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+}
+
+// domain 모듈의 경우 main method 없이 라이브러리 역할을 하는 모듈이다.
+project(':kora-api') {
+	dependencies {
+		implementation project(':kora-domain')
+	}
+}
+project(':kora-domain') {
+	dependencies {
+		// Todo Client Module 추가 필요
 	}
 }
 
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-tasks.named('bootBuildImage') {
-	builder = 'paketobuildpacks/builder-jammy-base:latest'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
