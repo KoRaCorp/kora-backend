@@ -27,6 +27,6 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         ResponseStatus responseStatus = returnType.getMethodAnnotation(ResponseStatus.class);
-        return ApiResponse.of(responseStatus.value(), body);
+        return ApiResponse.from(responseStatus.value(), body);
     }
 }

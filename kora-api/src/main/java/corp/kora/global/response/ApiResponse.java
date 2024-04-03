@@ -22,36 +22,33 @@ public final class ApiResponse<T> {
         this.data = data;
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {
+    public static <T> ApiResponse<T> from(HttpStatus httpStatus, String message, T data) {
         return new ApiResponse<>(httpStatus, message, data);
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
-        return of(httpStatus, httpStatus.name(), data);
+    public static <T> ApiResponse<T> from(HttpStatus httpStatus, T data) {
+        return from(httpStatus, httpStatus.name(), data);
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message) {
-        return of(httpStatus, message, null);
+    public static <T> ApiResponse<T> from(HttpStatus httpStatus, String message) {
+        return from(httpStatus, message, null);
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus) {
-        return of(httpStatus, httpStatus.name(), null);
-    }
 
     public static <T> ApiResponse<T> badRequest(String message) {
-        return of(HttpStatus.BAD_REQUEST, message);
+        return from(HttpStatus.BAD_REQUEST, message);
     }
 
     public static <T> ApiResponse<T> notFound(String message) {
-        return of(HttpStatus.NOT_FOUND, message);
+        return from(HttpStatus.NOT_FOUND, message);
     }
 
     public static <T> ApiResponse<T> forbidden(String message) {
-        return of(HttpStatus.FORBIDDEN, message);
+        return from(HttpStatus.FORBIDDEN, message);
     }
 
     public static <T> ApiResponse<T> unauthorized(String message) {
-        return of(HttpStatus.UNAUTHORIZED, message);
+        return from(HttpStatus.UNAUTHORIZED, message);
     }
 
     private Boolean isSuccess(int code) {
