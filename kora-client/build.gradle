@@ -1,4 +1,3 @@
-
 bootJar { // bootJar 끄기
     enabled = false
 }
@@ -20,8 +19,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // Jsoup Scraper
+    /**
+     * Jsoup Scraping
+     */
     implementation 'org.jsoup:jsoup:1.17.2'
+
+    /**
+     * WebClient
+     */
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    /**
+     * Json
+     */
+
+    implementation group: 'org.json', name: 'json', version: '20210307'
 
 }
 

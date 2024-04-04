@@ -29,3 +29,9 @@ springdoc:
 
 logging:
   config: classpath:logback/logback-local.xml
+
+# kakao oauth
+oauth:
+  kakao:
+    client-id: ${oauth.kakao.client-id}
+    redirect-uri: ${oauth.kakao.redirect-uri}
