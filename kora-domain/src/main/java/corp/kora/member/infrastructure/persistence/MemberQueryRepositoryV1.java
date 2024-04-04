@@ -20,7 +20,16 @@ public class MemberQueryRepositoryV1 implements MemberQueryRepository {
 
 	@Override
 	public Optional<Member> find(String authKey) {
-		return Optional.empty();
+		if (authKey == null || authKey.isBlank()) {
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(
+			queryFactory
+				.selectFrom(member)
+				.where(authKeyEq(authKey))
+				.fetchOne()
+		);
 	}
 
 	@Override
@@ -39,5 +48,9 @@ public class MemberQueryRepositoryV1 implements MemberQueryRepository {
 
 	private BooleanExpression memberIdEq(Long memberId) {
 		return memberId != null ? member.id.eq(memberId) : null;
+	}
+
+	private BooleanExpression authKeyEq(String authKey) {
+		return authKey != null ? member.authKey.eq(authKey) : null;
 	}
 }

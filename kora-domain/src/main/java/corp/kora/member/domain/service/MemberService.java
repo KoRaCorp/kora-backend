@@ -7,5 +7,6 @@ public interface MemberService {
 	Member find(Long memberId);
 
 	Long signUpIfAbsent(MemberSignUpIfAbsentInput input);
-	
+
+	Member find(String authKey);
 }

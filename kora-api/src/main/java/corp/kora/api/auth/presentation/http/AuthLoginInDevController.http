@@ -1,0 +1,6 @@
+POST http://localhost:8080/api/auth/login-in-dev
+Content-Type: application/json
+
+{
+  "authKey": "auth-key-test"
+}

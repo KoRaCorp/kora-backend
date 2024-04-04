@@ -14,6 +14,13 @@ public class MemberServiceV1 implements MemberService {
 	private final MemberCommandRepository memberCommandRepository;
 
 	@Override
+	public Member find(String authKey) {
+		return memberQueryRepository.find(authKey).orElseThrow(
+			() -> new MemberNotFoundException("member not found")
+		);
+	}
+
+	@Override
 	public Long signUpIfAbsent(MemberSignUpIfAbsentInput input) {
 		Member member = memberQueryRepository.find(input.authKey())
 			.orElseGet(() -> {
@@ -38,5 +45,5 @@ public class MemberServiceV1 implements MemberService {
 			() -> new MemberNotFoundException("member not found")
 		);
 	}
-	
+
 }
