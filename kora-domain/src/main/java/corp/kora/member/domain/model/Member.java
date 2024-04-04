@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,8 +32,17 @@ public class Member extends BaseEntity {
 
 	private String refreshToken;
 
-
 	public String profileImageUrl() {
 		return null;
+	}
+
+	@Builder
+	private Member(String email, String nickname) {
+		this.email = email;
+		this.nickname = nickname;
+		this.profileMessage = NONE;
+		this.refreshToken = NONE;
+		this.profileImageFilePath = NONE;
+		this.authKey = NONE;
 	}
 }

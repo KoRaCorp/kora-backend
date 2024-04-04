@@ -1,0 +1,31 @@
+spring:
+  # database
+  datasource:
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: ${spring.datasource.password}
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+    open-in-view: false
+
+# swagger
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    url: /docs/open-api-3.0.1.json
+    path: /docs/swagger
+
+# logback
+
+logging:
+  config: classpath:logback/logback-local.xml

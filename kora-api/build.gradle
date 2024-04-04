@@ -1,6 +1,20 @@
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.17.1'
+    }
+}
 
-
+plugins {
+    /**
+     * Reference Swagger & Restdocs Integration
+     * https://thalals.tistory.com/433
+     */
+    id "com.epages.restdocs-api-spec" version "${restdocsApiSpecVersion}"
+    // swagger generator 플로그인 추가
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+}
 configurations {
+    asciidoctorExt // asciidoctor extension에 대한 설정을 넣어준다.
 }
 
 repositories {
@@ -24,8 +38,63 @@ dependencies {
     // Todo @Trasactional 사용 목적 -> 더 가벼운 의존성 추가 가능한지 확인 필요
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // swagger 띄우기
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    /**
+     * Rest Docs
+     */
+
+
+    // swagger - rest docs 연결
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
+}
+
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+    delete file('src/main/resources/static/docs/')
+    copy {
+        from "build/resources/main/static/docs"
+        into "src/main/resources/static/docs/"
+    }
+}
+
+bootJar {
+    dependsOn('openapi3')
+}
+
+openapi3 {
+    servers = [
+            {
+                url = "http://localhost:8080"
+                description = "Local Server"
+            }
+
+    ]
+    title = "kora.corp api docs"
+    description = "### 💡 사용 시 주의사항!\n" +
+            "1. login을 시도하고 accessToken을 바로 밑 오른쪽 하단 `Authorize` 버튼을 클릭해서 Bearer를 제외한 accessToken을 바로 넣어 주시면 됩니다.\n" +
+            "2. api와 admin-api의 구분을 위해서 `api`에 📌 prefix를 달아 두었습니다."
+    version = "0.1.0"
+    format = "json"
+    outputFileNamePrefix = 'open-api-3.0.1'
+
+    // /static/docs/open-api-3.0.1.json 생성
+    outputDirectory = "build/resources/main/static/docs"
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+/**
+ * 빌드 정보 actuator에 추가
+ * META_INF/build-info.properties가 생성됨
+ */
+
+springBoot {
+    buildInfo()
 }

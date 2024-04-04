@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberFindByIdController {
     private final MemberFindByIdQueryManager memberFindByIdQueryManager;
 
-    @GetMapping("/members/{memberId}")
+    @GetMapping("/v1/members/{memberId}")
     @ResponseStatus(HttpStatus.OK)
     public MemberFindByIdResponse findById(
         @PathVariable Long memberId
     ) {
         return memberFindByIdQueryManager.read(new MemberFindByIdQueryManager.Query(memberId));
     }
-
 }

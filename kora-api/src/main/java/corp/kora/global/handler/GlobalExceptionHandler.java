@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse<Void> handleException(Exception e) {
 
-        return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return ApiResponse.from(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
 
