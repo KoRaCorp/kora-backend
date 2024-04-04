@@ -2,12 +2,14 @@ package corp.kora.kakao.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import corp.kora.kakao.request.KakaoGenerateTokenRequest;
 import corp.kora.kakao.response.KakaoGenerateTokenResponse;
 
+@Component
 public class KakaoGenerateTokenClient {
 
 	@Value("${oauth.kakao.client-id}")

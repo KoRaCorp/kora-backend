@@ -35,3 +35,13 @@ oauth:
   kakao:
     client-id: ${oauth.kakao.client-id}
     redirect-uri: ${oauth.kakao.redirect-uri}
+
+## token
+security:
+  jwt:
+    token:
+      secret-key: ${security.jwt.token.secret.key}
+      access:
+        expires: 36000000 #10시간
+      refresh:
+        expires: 1210000000 #14일

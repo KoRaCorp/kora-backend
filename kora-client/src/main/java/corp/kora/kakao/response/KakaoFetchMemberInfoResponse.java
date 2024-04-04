@@ -8,7 +8,7 @@ public record KakaoFetchMemberInfoResponse(
 	@JsonProperty("kakao_account") KakaoAccount kakaoAccount
 ) {
 
-	record KakaoAccount(
+	public record KakaoAccount(
 		@JsonProperty("name_needs_agreement") Boolean nameNeedsAgreement,
 		@JsonProperty("name") String name,
 		@JsonProperty("has_email") Boolean hasEmail,
