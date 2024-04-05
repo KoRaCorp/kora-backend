@@ -19,6 +19,36 @@ public class MemberQueryRepositoryV1 implements MemberQueryRepository {
 	}
 
 	@Override
+	public Optional<Member> findByNickname(String nickname) {
+		if (nickname == null || nickname.isBlank()) {
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(
+			queryFactory
+				.selectFrom(member)
+				.where(nicknameEq(nickname))
+				.fetchOne()
+		);
+
+	}
+
+	@Override
+	public Optional<Member> findLastNicknameSuffix(String nickname, String delimiter) {
+		if (nickname == null || nickname.isBlank()) {
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(
+			queryFactory
+				.selectFrom(member)
+				.where(nicknameEq(nickname + delimiter))
+				.orderBy(member.id.desc())
+				.fetchFirst()
+		);
+	}
+
+	@Override
 	public Optional<Member> find(String authKey) {
 		if (authKey == null || authKey.isBlank()) {
 			return Optional.empty();
@@ -52,5 +82,12 @@ public class MemberQueryRepositoryV1 implements MemberQueryRepository {
 
 	private BooleanExpression authKeyEq(String authKey) {
 		return authKey != null ? member.authKey.eq(authKey) : null;
+	}
+
+	private BooleanExpression nicknameEq(String nickname) {
+		if (nickname == null || nickname.isBlank()) {
+			return null;
+		}
+		return member.nickname.eq(nickname);
 	}
 }

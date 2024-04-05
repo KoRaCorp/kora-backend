@@ -1,6 +1,7 @@
 package corp.kora.member.infrastructure.persistence;
 
 import java.lang.reflect.Method;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,12 +19,34 @@ public class FakeMemberRepository implements MemberCommandRepository, MemberQuer
 	private final AtomicLong idGenerator = new AtomicLong();
 
 	@Override
+	public Optional<Member> findByNickname(String nickname) {
+		if (nickname == null || nickname.isBlank()) {
+			return Optional.empty();
+		}
+
+		return store.values().stream()
+			.filter(member -> member.getNickname().equals(nickname))
+			.findFirst();
+	}
+
+	@Override
+	public Optional<Member> findLastNicknameSuffix(String nickname, String delimiter) {
+		if (nickname == null || nickname.isBlank()) {
+			return Optional.empty();
+		}
+
+		return store.values()
+			.stream()
+			.filter(member -> member.getNickname().startsWith(nickname + delimiter))
+			.max(Comparator.comparing(Member::getId));
+	}
+
+	@Override
 	public Member save(Member member) {
 		if (!isNew(member)) {
-			System.out.println(" is not new ==");
 			return member;
 		}
-		
+
 		long memberId = idGenerator.incrementAndGet();
 		setId(memberId, member);
 		store.put(memberId, member);
@@ -43,7 +66,11 @@ public class FakeMemberRepository implements MemberCommandRepository, MemberQuer
 
 	@Override
 	public Optional<Member> find(Long memberId) {
-		return Optional.empty();
+		if (memberId == null) {
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(store.get(memberId));
 	}
 
 	@Override

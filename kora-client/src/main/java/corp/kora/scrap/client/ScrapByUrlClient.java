@@ -12,7 +12,6 @@ public class ScrapByUrlClient {
 	public void scrapByUrl(String url) {
 		try {
 			Document document = Jsoup.connect(url).get();
-			System.out.println("document = " + document);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
