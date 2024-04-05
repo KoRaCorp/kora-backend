@@ -42,7 +42,7 @@ class MemberFindByIdControllerTest extends ControllerTestSupport {
 		// when
 
 		ResultActions perform = mockMvc.perform(
-				RestDocumentationRequestBuilders.get("/v1/members/{memberId}", 1)
+				RestDocumentationRequestBuilders.get("/api/members/{memberId}", 1)
 					.contentType(MediaType.APPLICATION_JSON)
 			)
 			.andDo(print());

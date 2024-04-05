@@ -37,12 +37,24 @@ public class Member extends BaseEntity {
 	}
 
 	@Builder
-	private Member(String email, String nickname) {
+	private Member(String email, String nickname, String authKey) {
 		this.email = email;
 		this.nickname = nickname;
 		this.profileMessage = NONE;
 		this.refreshToken = NONE;
 		this.profileImageFilePath = NONE;
-		this.authKey = NONE;
+		this.authKey = authKey;
+	}
+
+	public void changeEmailIfNotSame(String email) {
+		if (this.email.equals(email)) {
+			return;
+		}
+
+		this.email = email;
+	}
+
+	public void updateRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 }

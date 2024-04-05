@@ -8,7 +8,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -29,3 +29,19 @@ springdoc:
 
 logging:
   config: classpath:logback/logback-local.xml
+
+# kakao oauth
+oauth:
+  kakao:
+    client-id: ${oauth.kakao.client-id}
+    redirect-uri: ${oauth.kakao.redirect-uri}
+
+## token
+security:
+  jwt:
+    token:
+      secret-key: ${security.jwt.token.secret.key}
+      access:
+        expires: 36000000 #10시간
+      refresh:
+        expires: 1210000000 #14일
