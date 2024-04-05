@@ -1,8 +1,7 @@
 package corp.kora.api.auth.presentation.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +15,13 @@ import lombok.RequiredArgsConstructor;
 public class AuthKakaoLoginController {
 	private final AuthKakaoLoginProcessor authKakaoLoginProcessor;
 
-	@PostMapping("/api/auth/kakao/login")
+	/**
+	 * https://kauth.kakao.com/oauth/authorize?client_id={clientId}&redirect_uri=http://localhost:8080/api/auth/kakao/login&response_type=code
+	 */
+	@GetMapping("/api/auth/kakao/login")
 	@ResponseStatus(HttpStatus.OK)
 	public AuthKakaoLoginResponse login(
-		@RequestBody AuthKakaoLoginRequest request
+		AuthKakaoLoginRequest request
 	) {
 		return authKakaoLoginProcessor.execute(request.code());
 	}
