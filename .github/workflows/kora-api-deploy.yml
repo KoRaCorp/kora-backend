@@ -2,8 +2,9 @@ name: kora-api deploy
 
 on:
   push:
-    branches:
-      - [ "ra/11" ]
+    branches: [ "ra/11" ]
+  workflow_dispatch:
+
 
 env:
   AWS_REGION: ap-northeast-2
