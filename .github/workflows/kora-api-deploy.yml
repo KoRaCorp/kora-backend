@@ -2,7 +2,7 @@ name: kora-api deploy
 
 on:
   push:
-    branches: [ "ra/11" ]
+    branches: [ "kora-api" ]
   workflow_dispatch:
 
 
@@ -92,4 +92,4 @@ jobs:
           version_label: ${{ env.BEANSTALK_APPLICATION_NAME }}-${{steps.current-time.outputs.formattedTime}}
           region: ${{ env.AWS_REGION }}
           deployment_package: deploy/deploy.zip
-          wait_for_environment_recovery: 200
+          wait_for_environment_recovery: 400
