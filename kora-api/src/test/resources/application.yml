@@ -22,3 +22,20 @@ spring:
     console:
       path: /h2-console
       enabled: true
+
+
+# kakao oauth
+oauth:
+  kakao:
+    client-id: test
+    redirect-uri: test
+
+## token
+security:
+  jwt:
+    token:
+      secret-key: test
+      access:
+        expires: 36000000
+      refresh:
+        expires: 1210000000
