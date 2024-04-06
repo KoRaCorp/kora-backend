@@ -8,10 +8,10 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  BEANSTALK_APPLICATION_NAME: kora-api
-  BEANSTALK_ENV_NAME: Kora-api-env
-  ECR_REPOSITORY: kora-api-ecr
-  ECR_URI: 381487228594.dkr.ecr.ap-northeast-2.amazonaws.com
+  BEANSTALK_APPLICATION_NAME: ${{ secrets.BEANSTALK_APPLICATION_NAME }}
+  BEANSTALK_ENV_NAME: ${{ secrets.BEANSTALK_ENV_NAME }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  ECR_URI: ${{ secrets.ECR_URI }}
 
 jobs:
   deploy:
