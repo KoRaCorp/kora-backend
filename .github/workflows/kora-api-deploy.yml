@@ -53,7 +53,7 @@ jobs:
 
       - name: change dockerfile name
         run: |
-          cp dockers/kora-api.Dockerfile Dockerfile
+          cp docker/kora-api.Dockerfile Dockerfile
 
 
       - name: build & push image to ecr
