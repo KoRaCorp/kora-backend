@@ -68,6 +68,10 @@ bootJar {
 openapi3 {
     servers = [
             {
+                url = "https://kora-api.item-wishy.net"
+                description = "Dev Server"
+            },
+            {
                 url = "http://localhost:8080"
                 description = "Local Server"
             }

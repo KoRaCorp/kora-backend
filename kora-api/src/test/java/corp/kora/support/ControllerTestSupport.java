@@ -21,11 +21,17 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import corp.kora.api.auth.application.AuthKakaoLoginProcessor;
+import corp.kora.api.auth.application.AuthLoginInDevProcessor;
+import corp.kora.api.auth.presentation.controller.AuthKakaoLoginController;
+import corp.kora.api.auth.presentation.controller.AuthLoginInDevController;
 import corp.kora.api.member.application.MemberFindByIdQueryManager;
 import corp.kora.api.member.presentation.controller.MemberFindByIdController;
 
 @WebMvcTest(controllers = {
-	MemberFindByIdController.class
+	MemberFindByIdController.class,
+	AuthKakaoLoginController.class,
+	AuthLoginInDevController.class
 })
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
@@ -45,6 +51,12 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected MemberFindByIdQueryManager memberFindByIdQueryManager;
+
+	@MockBean
+	protected AuthKakaoLoginProcessor authKakaoLoginProcessor;
+
+	@MockBean
+	protected AuthLoginInDevProcessor authLoginInDevProcessor;
 
 	protected FieldDescriptor[] objectDataResponseFields = {
 		PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태코드"),
