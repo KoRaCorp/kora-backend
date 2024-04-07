@@ -18,6 +18,9 @@ public class KakaoGenerateTokenClient {
 	@Value("${oauth.kakao.redirect-uri}")
 	private String redirectUri;
 
+	@Value("${oauth.kakao.client-secret}")
+	private String clientSecret;
+
 	private static final String GRANT_TYPE = "authorization_code";
 	private static final String GENERATE_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
@@ -27,7 +30,8 @@ public class KakaoGenerateTokenClient {
 			clientId,
 			GRANT_TYPE,
 			redirectUri,
-			code
+			code,
+			clientSecret
 		);
 
 		return WebClient.create(GENERATE_TOKEN_URL)

@@ -9,7 +9,8 @@ public record KakaoGenerateTokenRequest(
 	@JsonProperty("client_id") String clientId,
 	@JsonProperty("grant_type") String grantType,
 	@JsonProperty("redirect_uri") String redirectUri,
-	@JsonProperty("code") String code
+	@JsonProperty("code") String code,
+	@JsonProperty("client_secret") String clientSecret
 ) {
 
 	public MultiValueMap<String, String> toFormData() {
@@ -18,6 +19,7 @@ public record KakaoGenerateTokenRequest(
 		formDataMap.add("client_id", clientId);
 		formDataMap.add("redirect_uri", redirectUri);
 		formDataMap.add("code", code);
+		formDataMap.add("client_secret", clientSecret);
 
 		return formDataMap;
 

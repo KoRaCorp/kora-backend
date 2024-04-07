@@ -34,6 +34,7 @@ logging:
 oauth:
   kakao:
     client-id: ${oauth.kakao.client-id}
+    client-secret: ${oauth.kakao.client-secret}
     redirect-uri: ${oauth.kakao.redirect-uri}
 
 ## token
