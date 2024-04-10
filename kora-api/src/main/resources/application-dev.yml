@@ -28,7 +28,7 @@ springdoc:
 # logback
 
 logging:
-  config: classpath:logback/logback-local.xml
+  config: classpath:logback/logback-dev.xml
 
 # kakao oauth
 oauth:
