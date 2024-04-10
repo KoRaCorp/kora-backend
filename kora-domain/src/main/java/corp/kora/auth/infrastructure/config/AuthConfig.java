@@ -20,7 +20,7 @@ public class AuthConfig {
 
 	@Bean
 	public TokenProvider tokenProvider(
-		@Value("${security.jwt.token.secret.key}") final String secretKey,
+		@Value("${security.jwt.token.secret-key}") final String secretKey,
 		@Value("${security.jwt.token.access.expires}") final long accessTokenExpirationInMilliseconds,
 		@Value("${security.jwt.token.refresh.expires}") final long refreshTokenExpirationInMilliseconds
 	) {

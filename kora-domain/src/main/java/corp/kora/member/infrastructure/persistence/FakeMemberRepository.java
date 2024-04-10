@@ -19,6 +19,11 @@ public class FakeMemberRepository implements MemberCommandRepository, MemberQuer
 	private final AtomicLong idGenerator = new AtomicLong();
 
 	@Override
+	public Optional<Member> findById(Long memberId) {
+		return Optional.empty();
+	}
+
+	@Override
 	public Optional<Member> findByNickname(String nickname) {
 		if (nickname == null || nickname.isBlank()) {
 			return Optional.empty();

@@ -12,4 +12,6 @@ public interface MemberQueryRepository {
 	Optional<Member> findByNickname(String nickname);
 
 	Optional<Member> findLastNicknameSuffix(String nickname, String delimiter);
+
+	Optional<Member> findById(Long memberId);
 }

@@ -19,6 +19,20 @@ public class MemberQueryRepositoryV1 implements MemberQueryRepository {
 	}
 
 	@Override
+	public Optional<Member> findById(Long memberId) {
+		if (memberId == null) {
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(
+			queryFactory
+				.selectFrom(member)
+				.where(memberIdEq(memberId))
+				.fetchOne()
+		);
+	}
+
+	@Override
 	public Optional<Member> findByNickname(String nickname) {
 		if (nickname == null || nickname.isBlank()) {
 			return Optional.empty();
