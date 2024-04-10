@@ -35,18 +35,72 @@ public class RequestResponseLoggingFilter implements Filter {
 		chain.doFilter(requestWrapper, responseWrapper);
 		long end = System.currentTimeMillis();
 
-		log.warn("\n" +
-				"[REQUEST] {} - {} {} - {}\n" +
-				"Headers : {}\n" +
-				"Request : {}\n" +
-				"Response : {}\n",
-			((HttpServletRequest)request).getMethod(),
-			((HttpServletRequest)request).getRequestURI(),
+		if (is4xx(responseWrapper)) {
+			doRequestResponseLoggingByWarn((HttpServletRequest)request, requestWrapper, responseWrapper, start, end);
+		} else if (is5xx(responseWrapper)) {
+			doRequestResponseLoggingByError((HttpServletRequest)request, requestWrapper, responseWrapper, start, end);
+		} else {
+			doRequestResponseLoggingByInfo((HttpServletRequest)request, requestWrapper, responseWrapper, start, end);
+		}
+
+	}
+
+	private boolean is5xx(ContentCachingResponseWrapper responseWrapper) {
+		return responseWrapper.getStatus() >= 500;
+	}
+
+	private boolean is4xx(ContentCachingResponseWrapper responseWrapper) {
+		return responseWrapper.getStatus() >= 400 && responseWrapper.getStatus() < 500;
+	}
+
+	private void doRequestResponseLoggingByInfo(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
+		ContentCachingResponseWrapper responseWrapper, long start, long end) throws IOException {
+
+		log.info(getLoggingFormat(),
+			request.getMethod(),
+			request.getRequestURI(),
 			responseWrapper.getStatus(),
 			(end - start) / 1000.0,
-			getHeaders((HttpServletRequest)request),
+			getHeaders(request),
 			getRequestBody(requestWrapper),
 			getResponseBody(responseWrapper));
+
+	}
+
+	private void doRequestResponseLoggingByError(HttpServletRequest request,
+		ContentCachingRequestWrapper requestWrapper, ContentCachingResponseWrapper responseWrapper, long start,
+		long end) throws IOException {
+
+		log.error(getLoggingFormat(),
+			request.getMethod(),
+			request.getRequestURI(),
+			responseWrapper.getStatus(),
+			(end - start) / 1000.0,
+			getHeaders(request),
+			getRequestBody(requestWrapper),
+			getResponseBody(responseWrapper));
+
+	}
+
+	private void doRequestResponseLoggingByWarn(HttpServletRequest request,
+		ContentCachingRequestWrapper requestWrapper,
+		ContentCachingResponseWrapper responseWrapper, long start, long end) throws IOException {
+		log.warn(getLoggingFormat(),
+			request.getMethod(),
+			request.getRequestURI(),
+			responseWrapper.getStatus(),
+			(end - start) / 1000.0,
+			getHeaders(request),
+			getRequestBody(requestWrapper),
+			getResponseBody(responseWrapper));
+	}
+
+	private String getLoggingFormat() {
+		return "\n" +
+			"[REQUEST] {} - {} {} - {}\n" +
+			"Headers : {}\n" +
+			"Request : {}\n" +
+			"Response : {}\n";
 	}
 
 	private Map getHeaders(HttpServletRequest request) {
