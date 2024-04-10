@@ -2,13 +2,12 @@
 <configuration>
     <include resource="logback/logback-global.xml"/>
     <springProfile name="dev">
-        <include resource="logback/appender/file-appender.xml"/>
-
+        <include resource="logback/appender/console-appender.xml"/>
         <logger name="org.springframework" level="WARN">
-            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <root level="WARN">
-            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 </configuration>

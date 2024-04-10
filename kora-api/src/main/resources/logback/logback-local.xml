@@ -3,7 +3,6 @@
     <include resource="logback/logback-global.xml"/>
     <springProfile name="local|test">
         <include resource="logback/appender/console-appender.xml"/>
-
         <logger name="org.springframework" level="INFO">
             <appender-ref ref="CONSOLE"/>
         </logger>
