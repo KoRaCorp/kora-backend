@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: ${spring.datasource.password}
   jpa:
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
       ddl-auto: none
     properties:

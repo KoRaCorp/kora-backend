@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/buckets/create
+Content-Type: application/json
+Authorization: Bearer eyJyZHMiOiJ5NWxLbiIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzU5NjgzLCJleHAiOjE3MTI3OTU2ODN9.8KjAIVxGBscLV-lEi_lP4rCfOb1fCe58JVQsbw1MM7s
+
+{
+  "bucketName": "bucket2"
+}

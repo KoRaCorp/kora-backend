@@ -41,7 +41,7 @@ oauth:
 security:
   jwt:
     token:
-      secret-key: ${security.jwt.token.secret.key}
+      secret-key: ${security.jwt.token.secret-key}
       access:
         expires: 36000000 #10시간
       refresh:
