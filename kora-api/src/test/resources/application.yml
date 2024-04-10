@@ -35,7 +35,7 @@ oauth:
 security:
   jwt:
     token:
-      secret-key: test
+      secret-key: adinwdoiqnwiodn98yiwjewjeoijasiodjaiosjdijsdijasiodjioqjweiojq
       access:
         expires: 36000000
       refresh:
