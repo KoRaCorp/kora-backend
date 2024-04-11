@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import net.bytebuddy.utility.RandomString;
 
-import corp.kora.bucket.domain.repository.BucketCommandRepository;
+import corp.kora.bucket.domain.repository.BucketRepository;
 import corp.kora.member.domain.model.Member;
 import corp.kora.member.domain.repository.MemberCommandRepository;
 
@@ -18,7 +18,7 @@ public abstract class IntegrationTestSupport {
 	protected MemberCommandRepository memberCommandRepository;
 
 	@Autowired
-	protected BucketCommandRepository bucketCommandRepository;
+	protected BucketRepository bucketRepository;
 
 	@BeforeEach
 	void setUp() {
@@ -28,7 +28,7 @@ public abstract class IntegrationTestSupport {
 
 	private void setUpRepository() {
 		memberCommandRepository.deleteAllInBatch();
-		bucketCommandRepository.deleteAllInBatch();
+		bucketRepository.deleteAllInBatch();
 	}
 
 	private void setUpTimeZone() {

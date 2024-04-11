@@ -6,8 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import corp.kora.api.bucket.presentation.response.BucketCreateResponse;
 import corp.kora.bucket.domain.exception.DuplicateBucketException;
 import corp.kora.bucket.domain.model.Bucket;
-import corp.kora.bucket.domain.repository.BucketCommandRepository;
-import corp.kora.bucket.domain.repository.BucketQueryRepository;
+import corp.kora.bucket.domain.repository.BucketRepository;
 import corp.kora.member.domain.exception.NotFoundMemberException;
 import corp.kora.member.domain.model.Member;
 import corp.kora.member.domain.repository.MemberQueryRepository;
@@ -17,8 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BucketCreateProcessor {
 	private final MemberQueryRepository memberQueryRepository;
-	private final BucketCommandRepository bucketCommandRepository;
-	private final BucketQueryRepository bucketQueryRepository;
+	private final BucketRepository bucketRepository;
 
 	@Transactional
 	public BucketCreateResponse execute(BucketCreateProcessor.Command command) {
@@ -29,12 +27,13 @@ public class BucketCreateProcessor {
 			throw new DuplicateBucketException("이미 존재하는 버킷 이름입니다.");
 		}
 
-		Bucket bucketToCreate = Bucket.from(command.bucketName, loginMember);
-		return BucketCreateResponse.from(bucketCommandRepository.save(bucketToCreate).getId());
+		Bucket bucketToCreate = Bucket.
+			from(command.bucketName, loginMember.getId());
+		return BucketCreateResponse.from(bucketRepository.save(bucketToCreate).getId());
 	}
 
 	private boolean isDuplicatedBucket(Command command, Member loginMember) {
-		return bucketQueryRepository.findByMemberAndBucketName(loginMember, command.bucketName).isPresent();
+		return bucketRepository.findByMemberIdAndBucketName(loginMember.getId(), command.bucketName).isPresent();
 	}
 
 	public record Command(
