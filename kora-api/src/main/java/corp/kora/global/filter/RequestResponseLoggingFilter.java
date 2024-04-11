@@ -27,6 +27,7 @@ public class RequestResponseLoggingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws
 		IOException,
 		ServletException {
+
 		ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest)request);
 		ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(
 			(HttpServletResponse)response);
@@ -34,84 +35,103 @@ public class RequestResponseLoggingFilter implements Filter {
 		long start = System.currentTimeMillis();
 		chain.doFilter(requestWrapper, responseWrapper);
 		long end = System.currentTimeMillis();
+		double executionTimeInSeconds = (end - start) / 1000.0;
+		doLogging((HttpServletRequest)request, requestWrapper, responseWrapper, executionTimeInSeconds);
 
-		if (is4xx(responseWrapper)) {
-			doRequestResponseLoggingByWarn((HttpServletRequest)request, requestWrapper, responseWrapper, start, end);
-		} else if (is5xx(responseWrapper)) {
-			doRequestResponseLoggingByError((HttpServletRequest)request, requestWrapper, responseWrapper, start, end);
-		} else {
-			doRequestResponseLoggingByInfo((HttpServletRequest)request, requestWrapper, responseWrapper, start, end);
+	}
+
+	private void doLogging(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
+		ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
+
+		int statusCode = responseWrapper.getStatus();
+
+		if (is4xx(statusCode)) {
+			doLoggingByWarn(request, requestWrapper, responseWrapper, executionTimeInSeconds);
+			return;
 		}
 
+		if (is5xx(statusCode)) {
+			doLoggingByError(request, requestWrapper, responseWrapper, executionTimeInSeconds);
+			return;
+		}
+
+		doLoggingByInfo(request, requestWrapper, responseWrapper, executionTimeInSeconds);
 	}
 
-	private boolean is5xx(ContentCachingResponseWrapper responseWrapper) {
-		return responseWrapper.getStatus() >= 500;
-	}
+	private void doLoggingByInfo(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
+		ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
 
-	private boolean is4xx(ContentCachingResponseWrapper responseWrapper) {
-		return responseWrapper.getStatus() >= 400 && responseWrapper.getStatus() < 500;
-	}
-
-	private void doRequestResponseLoggingByInfo(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
-		ContentCachingResponseWrapper responseWrapper, long start, long end) throws IOException {
+		if (!log.isInfoEnabled()) {
+			return;
+		}
 
 		log.info(getLoggingFormat(),
-			request.getMethod(),
 			request.getRequestURI(),
-			responseWrapper.getStatus(),
-			(end - start) / 1000.0,
+			request.getMethod(),
 			getHeaders(request),
 			getRequestBody(requestWrapper),
-			getResponseBody(responseWrapper));
-
-	}
-
-	private void doRequestResponseLoggingByError(HttpServletRequest request,
-		ContentCachingRequestWrapper requestWrapper, ContentCachingResponseWrapper responseWrapper, long start,
-		long end) throws IOException {
-
-		log.error(getLoggingFormat(),
-			request.getMethod(),
-			request.getRequestURI(),
 			responseWrapper.getStatus(),
-			(end - start) / 1000.0,
-			getHeaders(request),
-			getRequestBody(requestWrapper),
-			getResponseBody(responseWrapper));
-
+			responseWrapper.getContentType(),
+			getResponseBody(responseWrapper),
+			executionTimeInSeconds);
 	}
 
-	private void doRequestResponseLoggingByWarn(HttpServletRequest request,
-		ContentCachingRequestWrapper requestWrapper,
-		ContentCachingResponseWrapper responseWrapper, long start, long end) throws IOException {
+	private void doLoggingByWarn(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
+		ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
+
+		if (!log.isWarnEnabled()) {
+			return;
+		}
 		log.warn(getLoggingFormat(),
-			request.getMethod(),
 			request.getRequestURI(),
-			responseWrapper.getStatus(),
-			(end - start) / 1000.0,
+			request.getMethod(),
 			getHeaders(request),
 			getRequestBody(requestWrapper),
-			getResponseBody(responseWrapper));
+			responseWrapper.getStatus(),
+			responseWrapper.getContentType(),
+			getResponseBody(responseWrapper),
+			executionTimeInSeconds);
+	}
+
+	private void doLoggingByError(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
+		ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
+
+		if (!log.isErrorEnabled()) {
+			return;
+		}
+		log.error(getLoggingFormat(),
+			request.getRequestURI(),
+			request.getMethod(),
+			getHeaders(request),
+			getRequestBody(requestWrapper),
+			responseWrapper.getStatus(),
+			responseWrapper.getContentType(),
+			getResponseBody(responseWrapper),
+			executionTimeInSeconds);
 	}
 
 	private String getLoggingFormat() {
-		return "\n" +
-			"[REQUEST] {} - {} {} - {}\n" +
-			"Headers : {}\n" +
-			"Request : {}\n" +
-			"Response : {}\n";
+		return """
+			\nREQUEST: 
+			  uri: {}
+			  method: {}
+			  headers: {}
+			  body: {}
+			====================
+			RESPONSE:
+			  status: {}
+			  content-type: {}
+			  body: {}
+			  execution time: {} (in seconds)
+			""";
 	}
 
-	private Map getHeaders(HttpServletRequest request) {
-		Map headerMap = new HashMap<>();
+	private boolean is5xx(int statusCoude) {
+		return statusCoude >= 500;
+	}
 
-		Enumeration headerArray = request.getHeaderNames();
-		while (headerArray.hasMoreElements()) {
-			String headerName = (String)headerArray.nextElement();
-			headerMap.put(headerName, request.getHeader(headerName));
-		}
-		return headerMap;
+	private boolean is4xx(int statusCode) {
+		return statusCode >= 400 && statusCode < 500;
 	}
 
 	private String getRequestBody(ContentCachingRequestWrapper request) {
@@ -127,6 +147,17 @@ public class RequestResponseLoggingFilter implements Filter {
 			}
 		}
 		return " - ";
+	}
+
+	private Map getHeaders(HttpServletRequest request) {
+		Map headerMap = new HashMap<>();
+
+		Enumeration headerArray = request.getHeaderNames();
+		while (headerArray.hasMoreElements()) {
+			String headerName = (String)headerArray.nextElement();
+			headerMap.put(headerName, request.getHeader(headerName));
+		}
+		return headerMap;
 	}
 
 	private String getResponseBody(final HttpServletResponse response) throws IOException {
