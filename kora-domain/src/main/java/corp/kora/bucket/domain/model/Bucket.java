@@ -1,15 +1,12 @@
 package corp.kora.bucket.domain.model;
 
 import corp.kora.global.entity.BaseEntity;
-import corp.kora.member.domain.model.Member;
+import corp.kora.global.exception.NoAccessAuthorizationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,18 +21,30 @@ public class Bucket extends BaseEntity {
 	private Long id;
 
 	private String bucketName;
+	
+	private Long memberId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	private Member member;
-
-	private Bucket(String bucketName, Member member) {
+	private Bucket(String bucketName, Long memberId) {
 		this.bucketName = bucketName;
-		this.member = member;
+		this.memberId = memberId;
 	}
 
-	public static Bucket from(String bucketName, Member member) {
-		return new Bucket(bucketName, member);
+	public static Bucket from(String bucketName, Long memberId) {
+		return new Bucket(bucketName, memberId);
 	}
 
+	public void validateIsOwner(Long memberId) {
+		if (!isOwner(memberId)) {
+			throw new NoAccessAuthorizationException("버킷 소유자만 접근할 수 있습니다.");
+		}
+	}
+
+	public void changeBucketName(String bucketNameToChange) {
+		// Todo : bucketName validation check 추가
+		this.bucketName = bucketNameToChange;
+	}
+
+	private boolean isOwner(Long memberId) {
+		return this.memberId.equals(memberId);
+	}
 }

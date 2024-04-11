@@ -1,7 +1,4 @@
-POST http://localhost:8080/api/buckets/create
+POST http://localhost:8080/api/buckets/2/delete
 Content-Type: application/json
 Authorization: Bearer eyJyZHMiOiJuelkxSyIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEyODM4ODYzLCJleHAiOjE3MTI4NzQ4NjN9.t8EIY1PRRPUfsTNlJ9Na7yUN7xOAsvWluamGlx6sRSU
 
-{
-  "bucketName": "bucket3"
-}
