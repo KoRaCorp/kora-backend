@@ -28,7 +28,7 @@ public class RequestResponseLoggingFilter implements Filter {
                 (HttpServletResponse) response);
 
         long start = System.currentTimeMillis();
-        chain.doFilter(requestWrapper, responseWrapper);
+        chain.doFilter(request, response);
         long end = System.currentTimeMillis();
         double executionTimeInSeconds = (end - start) / 1000.0;
         doLogging((HttpServletRequest) request, requestWrapper, responseWrapper, executionTimeInSeconds);
@@ -38,6 +38,9 @@ public class RequestResponseLoggingFilter implements Filter {
     private void doLogging(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
                            ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
 
+        if (!needToLogRequest(request)) {
+            return;
+        }
         int statusCode = responseWrapper.getStatus();
 
         if (is4xx(statusCode)) {
@@ -51,6 +54,11 @@ public class RequestResponseLoggingFilter implements Filter {
         }
 
         doLoggingByInfo(request, requestWrapper, responseWrapper, executionTimeInSeconds);
+    }
+
+    private boolean needToLogRequest(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.equals("/") || requestURI.startsWith("/api");
     }
 
     private void doLoggingByInfo(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
@@ -70,7 +78,7 @@ public class RequestResponseLoggingFilter implements Filter {
     private void doLoggingByWarn(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
                                  ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
 
-
+        
         log.warn(getLoggingFormat(),
                 request.getRequestURI(),
                 request.getMethod(),
@@ -85,7 +93,6 @@ public class RequestResponseLoggingFilter implements Filter {
     private void doLoggingByError(HttpServletRequest request, ContentCachingRequestWrapper requestWrapper,
                                   ContentCachingResponseWrapper responseWrapper, double executionTimeInSeconds) throws IOException {
 
-        
         log.error(getLoggingFormat(),
                 request.getRequestURI(),
                 request.getMethod(),
