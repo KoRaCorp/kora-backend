@@ -14,11 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BucketFindAllByMeManager {
     private final BucketRepository bucketRepository;
-    private final MemberRepository memberQueryRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public List<BucketFindAllByMeResponse> read(Query query) {
-        memberQueryRepository.findById(query.loginMemberId)
+        memberRepository.findById(query.loginMemberId)
                 .orElseThrow(() -> new NotFoundMemberException("존재하지 않은 회원입니다."));
 
         return bucketRepository.findAllByMemberId(query.loginMemberId)

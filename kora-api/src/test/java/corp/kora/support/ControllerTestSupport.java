@@ -7,8 +7,8 @@ import corp.kora.api.auth.presentation.controller.AuthKakaoLoginController;
 import corp.kora.api.auth.presentation.controller.AuthLoginInDevController;
 import corp.kora.api.bucket.application.BucketCreateProcessor;
 import corp.kora.api.bucket.presentation.controller.BucketCreateController;
-import corp.kora.api.member.application.MemberFindByIdManager;
-import corp.kora.api.member.presentation.controller.MemberFindByIdController;
+import corp.kora.api.member.application.MemberReadByIdManager;
+import corp.kora.api.member.presentation.controller.MemberReadByIdController;
 import corp.kora.auth.domain.provider.TokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {
-        MemberFindByIdController.class,
+        MemberReadByIdController.class,
         AuthKakaoLoginController.class,
         AuthLoginInDevController.class,
         BucketCreateController.class
@@ -62,7 +62,7 @@ public abstract class ControllerTestSupport {
     protected TokenProvider tokenProvider;
 
     @MockBean
-    protected MemberFindByIdManager memberFindByIdQueryManager;
+    protected MemberReadByIdManager memberFindByIdQueryManager;
 
     @MockBean
     protected AuthKakaoLoginProcessor authKakaoLoginProcessor;

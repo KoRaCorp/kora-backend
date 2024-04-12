@@ -1,9 +1,9 @@
 package corp.kora.api.member.application;
 
-import corp.kora.api.member.presentation.response.MemberFindByIdResponse;
+import corp.kora.api.member.presentation.response.MemberReadByIdResponse;
 import corp.kora.member.domain.exception.NotFoundMemberException;
-import corp.kora.member.domain.model.Member;
-import corp.kora.member.domain.repository.MemberRepository;
+import corp.kora.member.domain.model.MemberReadModel;
+import corp.kora.member.domain.repository.MemberReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class MemberFindByIdManager {
-    private final MemberRepository memberRepository;
+public class MemberReadByIdManager {
+    private final MemberReader memberReader;
 
     @Transactional(readOnly = true)
-    public MemberFindByIdResponse read(Query query) {
-        Member member = memberRepository.findById(query.memberId).orElseThrow(() -> new NotFoundMemberException("Not Found Member"));
-        return MemberFindByIdResponse.from(member);
+    public MemberReadByIdResponse read(Query query) {
+        MemberReadModel memberReadModel = memberReader.readById(query.memberId)
+                .orElseThrow(() -> new NotFoundMemberException("Not Found Member"));
+
+        return MemberReadByIdResponse.from(memberReadModel);
     }
 
     public record Query(

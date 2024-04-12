@@ -2,30 +2,33 @@ package corp.kora.api.auth.application;
 
 import corp.kora.api.auth.presentation.response.AuthKakaoLoginResponse;
 import corp.kora.auth.domain.provider.TokenProvider;
-import corp.kora.auth.domain.service.output.AuthToken;
 import corp.kora.kakao.client.KakaoFetchMemberInfoClient;
 import corp.kora.kakao.client.KakaoGenerateTokenClient;
 import corp.kora.kakao.response.KakaoFetchMemberInfoResponse;
 import corp.kora.kakao.response.KakaoGenerateTokenResponse;
-import corp.kora.member.domain.exception.NotFoundMemberException;
 import corp.kora.member.domain.model.Member;
 import corp.kora.member.domain.provider.NicknameProvider;
 import corp.kora.member.domain.repository.MemberRepository;
 import corp.kora.member.domain.service.input.MemberSignUpIfAbsentInput;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class AuthKakaoLoginProcessor {
+public class AuthKakaoLoginProcessor extends LoginProcessor {
     private final KakaoFetchMemberInfoClient kakaoFetchMemberInfoClient;
     private final KakaoGenerateTokenClient kakaoGenerateTokenClient;
-    private final MemberRepository memberRepository;
     private final NicknameProvider nicknameProvider;
-    private final TokenProvider tokenProvider;
+
+    public AuthKakaoLoginProcessor(KakaoFetchMemberInfoClient kakaoFetchMemberInfoClient, KakaoGenerateTokenClient kakaoGenerateTokenClient, NicknameProvider nicknameProvider, MemberRepository memberRepository, TokenProvider tokenProvider) {
+        super(memberRepository, tokenProvider);
+        this.kakaoFetchMemberInfoClient = kakaoFetchMemberInfoClient;
+        this.kakaoGenerateTokenClient = kakaoGenerateTokenClient;
+        this.nicknameProvider = nicknameProvider;
+
+    }
+
 
     @Transactional
     public AuthKakaoLoginResponse execute(String code) {
@@ -43,18 +46,6 @@ public class AuthKakaoLoginProcessor {
         return AuthKakaoLoginResponse.from(login(memberId));
     }
 
-
-    private AuthToken login(Long memberId) {
-        Member foundMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundMemberException("Not Found Member"));
-
-        String accessToken = tokenProvider.createAccessToken(String.valueOf(memberId));
-        String refreshToken = tokenProvider.createRefreshToken(String.valueOf(memberId));
-
-        foundMember.updateRefreshToken(refreshToken);
-
-        return new AuthToken(accessToken, refreshToken);
-    }
 
     private Long signUpIfAbsent(MemberSignUpIfAbsentInput input) {
         Member member = memberRepository.findByAuthKey(input.authKey())

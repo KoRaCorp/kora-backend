@@ -1,7 +1,7 @@
 package corp.kora.api.member.presentation.controller;
 
-import corp.kora.api.member.application.MemberFindByIdManager;
-import corp.kora.api.member.presentation.response.MemberFindByIdResponse;
+import corp.kora.api.member.application.MemberReadByIdManager;
+import corp.kora.api.member.presentation.response.MemberReadByIdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class MemberFindByIdController {
-    private final MemberFindByIdManager memberFindByIdQueryManager;
+public class MemberReadByIdController {
+    private final MemberReadByIdManager memberFindByIdQueryManager;
 
     @GetMapping("/api/members/{memberId}")
     @ResponseStatus(HttpStatus.OK)
-    public MemberFindByIdResponse findById(
+    public MemberReadByIdResponse readById(
             @PathVariable Long memberId
     ) {
-        return memberFindByIdQueryManager.read(new MemberFindByIdManager.Query(memberId));
+        return memberFindByIdQueryManager.read(new MemberReadByIdManager.Query(memberId));
     }
 }

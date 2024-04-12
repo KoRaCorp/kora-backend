@@ -3,9 +3,9 @@ package corp.kora.api.member.presentation.controller;
 import com.epages.restdocs.apispec.FieldDescriptors;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import corp.kora.api.member.application.MemberFindByIdManager;
-import corp.kora.api.member.presentation.response.MemberFindByIdResponse;
-import corp.kora.member.domain.model.Member;
+import corp.kora.api.member.application.MemberReadByIdManager;
+import corp.kora.api.member.presentation.response.MemberReadByIdResponse;
+import corp.kora.member.domain.model.MemberReadModel;
 import corp.kora.support.ControllerTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,21 +24,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class MemberFindByIdControllerTest extends ControllerTestSupport {
+class MemberReadByIdControllerTest extends ControllerTestSupport {
 
     @DisplayName("회원 id로 회원을 조회한다.")
     @Test
-    void findById() throws Exception {
+    void readById() throws Exception {
         // given
 
-        Member member = Member.builder()
-                .email("example@gmail.com")
-                .nickname("example")
-                .build();
+        MemberReadModel memberReadModel = new MemberReadModel(1L, "example@gmail.com", "example", null, null);
 
-        doReturn(MemberFindByIdResponse.from(member))
+
+        doReturn(MemberReadByIdResponse.from(memberReadModel))
                 .when(memberFindByIdQueryManager)
-                .read(any(MemberFindByIdManager.Query.class));
+                .read(any(MemberReadByIdManager.Query.class));
 
         // when
 
