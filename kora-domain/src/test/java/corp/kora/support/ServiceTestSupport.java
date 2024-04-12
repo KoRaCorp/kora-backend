@@ -1,26 +1,21 @@
 package corp.kora.support;
 
-import org.junit.jupiter.api.AfterEach;
-
-import corp.kora.member.domain.repository.MemberCommandRepository;
-import corp.kora.member.domain.repository.MemberQueryRepository;
+import corp.kora.member.domain.repository.MemberRepository;
 import corp.kora.member.infrastructure.persistence.FakeMemberRepository;
+import org.junit.jupiter.api.AfterEach;
 
 public abstract class ServiceTestSupport {
 
-	protected MemberCommandRepository memberCommandRepository;
-	protected MemberQueryRepository memberQueryRepository;
+    protected MemberRepository memberRepository;
 
-	public ServiceTestSupport() {
-		// Member
-		FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
-		memberCommandRepository = fakeMemberRepository;
-		memberQueryRepository = fakeMemberRepository;
+    public ServiceTestSupport() {
+        // Member
+        memberRepository = new FakeMemberRepository();
 
-	}
+    }
 
-	@AfterEach
-	void tearDown() {
-		memberCommandRepository.deleteAllInBatch();
-	}
+    @AfterEach
+    void tearDown() {
+        memberRepository.deleteAllInBatch();
+    }
 }
