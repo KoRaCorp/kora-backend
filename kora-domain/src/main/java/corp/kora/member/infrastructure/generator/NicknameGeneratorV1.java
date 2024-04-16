@@ -1,19 +1,44 @@
-package corp.kora.member.infrastructure.provider;
+package corp.kora.member.infrastructure.generator;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.springframework.util.StringUtils;
 
 import corp.kora.member.domain.exception.InvalidEmailException;
-import corp.kora.member.domain.provider.NicknameProvider;
+import corp.kora.member.domain.generater.NicknameGenerator;
+import corp.kora.member.domain.model.Member;
+import corp.kora.member.domain.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 
-// email prefix에 . 이 포함되어 있으면 nickname suffix를 추출하고, 없으면 a를 반환한다.
-public class NicknameProviderV1 implements NicknameProvider {
+@RequiredArgsConstructor
+public class NicknameGeneratorV1 implements NicknameGenerator {
+	private final MemberRepository memberRepository;
+
 	private static final String NICKNAME_SUFFIX_DELIMITER = ".";
 	private static final String EMAIL_DELIMITER = "@";
 
 	@Override
-	public String generateNextNicknameSuffix(String currentNicknameSuffix) {
+	public String generateNickname(String email) {
+		String nickname = extractNickname(email);
+		if (memberRepository.findByNickname(nickname).isEmpty()) {
+			return nickname;
+		}
+
+		Optional<Member> memberOptional = memberRepository.findLastNicknameSuffix(nickname,
+			getNicknameSuffixDelimiter());
+
+		final String lastNicknameSuffix = memberOptional.map(
+			member -> member.getNickname().substring(nickname.length() + 1)).orElse(null);
+
+		return new StringBuilder()
+			.append(nickname)
+			.append(getNicknameSuffixDelimiter())
+			.append(generateNextNicknameSuffix(lastNicknameSuffix))
+			.toString();
+	}
+
+	private String generateNextNicknameSuffix(String currentNicknameSuffix) {
 		if (currentNicknameSuffix == null || currentNicknameSuffix.isEmpty()) {
 			return "a";
 		}
@@ -43,13 +68,11 @@ public class NicknameProviderV1 implements NicknameProvider {
 		return String.valueOf(suffix);
 	}
 
-	@Override
-	public String getNicknameSuffixDelimiter() {
+	private String getNicknameSuffixDelimiter() {
 		return NICKNAME_SUFFIX_DELIMITER;
 	}
 
-	@Override
-	public String extractNickname(String email) {
+	private String extractNickname(String email) {
 		validateEmail(email);
 		return email.split(EMAIL_DELIMITER)[0];
 	}

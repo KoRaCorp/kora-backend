@@ -1,24 +1,25 @@
 package corp.kora.api.auth.application;
 
+import corp.kora.api.auth.presentation.response.AuthLoginInDevResponse;
+import corp.kora.auth.domain.provider.TokenProvider;
+import corp.kora.global.exception.NoAccessAuthenticationException;
+import corp.kora.member.domain.model.Member;
+import corp.kora.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import corp.kora.api.auth.presentation.response.AuthLoginInDevResponse;
-import corp.kora.auth.domain.service.AuthService;
-import corp.kora.member.domain.model.Member;
-import corp.kora.member.domain.service.MemberService;
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
-public class AuthLoginInDevProcessor {
-	private final MemberService memberService;
-	private final AuthService authService;
+public class AuthLoginInDevProcessor extends LoginProcessor {
+    public AuthLoginInDevProcessor(MemberRepository memberRepository, TokenProvider tokenProvider) {
+        super(memberRepository, tokenProvider);
+    }
 
-	@Transactional
-	public AuthLoginInDevResponse execute(String authKey) {
-		Member foundMember = memberService.find(authKey);
-		return AuthLoginInDevResponse.from(authService.login(foundMember.getId()));
-	}
+    @Transactional
+    public AuthLoginInDevResponse execute(String authKey) {
+        Member foundMember = memberRepository.findByAuthKey(authKey)
+                .orElseThrow(() -> new NoAccessAuthenticationException("member not found"));
+
+        return AuthLoginInDevResponse.from(login(foundMember.getId()));
+    }
 
 }

@@ -1,12 +1,12 @@
-package corp.kora.api.auth.presentation.controller;
+package corp.kora.api.member.presentation.controller;
 
 import com.epages.restdocs.apispec.FieldDescriptors;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import corp.kora.api.auth.presentation.response.AuthLoginInDevResponse;
-import corp.kora.auth.domain.model.AuthTokenModel;
+import corp.kora.api.member.application.MemberReadByIdManager;
+import corp.kora.api.member.presentation.response.MemberReadByIdResponse;
+import corp.kora.member.domain.model.MemberReadModel;
 import corp.kora.support.ControllerTestSupport;
-import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -14,10 +14,9 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Map;
-
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -25,24 +24,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthLoginInDevControllerTest extends ControllerTestSupport {
+class MemberReadByIdControllerTest extends ControllerTestSupport {
 
-    @DisplayName("auth key를 통해서 로그인을 한다.")
+    @DisplayName("회원 id로 회원을 조회한다.")
     @Test
-    void login() throws Exception {
+    void readById() throws Exception {
         // given
-        doReturn(
-                AuthLoginInDevResponse.from(new AuthTokenModel(
-                        "eyJyZHMiOiJRRTVjTSIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEyMzkxNTkxLCJleHAiOjE3MTI0Mjc1OTF9.NkG8jQIW_dqJmiw90ozJMoiopybsWZgCYxfnCLkdxlE",
-                        "eyJyZHMiOiJyZDVaRiIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEyMzkxNTkxLCJleHAiOjE3MTM2MDE1OTF9.3wesTUq_z-d9QmJR29YIomd65jl_dD20YYcy8xPnFPc")))
-                .when(authLoginInDevProcessor)
-                .execute(anyString());
+
+        MemberReadModel memberReadModel = new MemberReadModel(1L, "example@gmail.com", "example", null, null);
+
+
+        doReturn(MemberReadByIdResponse.from(memberReadModel))
+                .when(memberFindByIdQueryManager)
+                .read(any(MemberReadByIdManager.Query.class));
 
         // when
+
         ResultActions perform = mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/api/auth/login-in-dev")
+                        RestDocumentationRequestBuilders.get("/api/members/{memberId}", 1)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(Map.of("authKey", RandomString.make())))
                 )
                 .andDo(print());
         // then
@@ -61,24 +61,31 @@ class AuthLoginInDevControllerTest extends ControllerTestSupport {
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
                                 .tag(TAG_MEMBER)
-                                .summary("개발 환경에서 편의를 위한 로그인 API")
-                                .description("개발 환경에서 편의를 위한 로그인 API")
-                                .requestFields(
-                                        fieldWithPath("authKey").type(JsonFieldType.STRING)
-                                                .description("인증 키")
+                                .summary("회원 id로 회원을 조회")
+                                .description("회원 id로 회원을 조회한다.")
+                                .pathParameters(
+                                        parameterWithName("memberId").description("회원 아이디")
                                 )
                                 .responseFields(
                                         new FieldDescriptors(objectDataResponseFields).and(
-                                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
+                                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
                                                         .optional()
-                                                        .description("access Token"),
-                                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
-                                                        .description("refresh Token"))
+                                                        .description("회원 아이디"),
+                                                fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                                        .description("이메일"),
+                                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("닉네임"),
+                                                fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING)
+                                                        .optional()
+                                                        .description("프로필 이미지 URL"),
+                                                fieldWithPath("data.profileMessage").type(JsonFieldType.STRING)
+                                                        .optional()
+                                                        .description("프로필 메세지")
+                                        )
                                 )
                                 .build())
+
                 )
         );
 
     }
-
 }
