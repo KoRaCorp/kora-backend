@@ -25,7 +25,6 @@ public class BucketChangeBucketNameController {
 		@PathVariable Long bucketId,
 		@RequestBody BucketChangeBucketNameRequest request
 	) {
-
 		return bucketChangeBucketNameProcessor.execute(
 			new BucketChangeBucketNameProcessor.Command(loginMemberId, bucketId, request.bucketName()));
 	}
