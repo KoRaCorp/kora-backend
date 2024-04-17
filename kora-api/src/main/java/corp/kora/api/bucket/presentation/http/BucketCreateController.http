@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/buckets/create
 Content-Type: application/json
-Authorization: Bearer eyJyZHMiOiJuelkxSyIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEyODM4ODYzLCJleHAiOjE3MTI4NzQ4NjN9.t8EIY1PRRPUfsTNlJ9Na7yUN7xOAsvWluamGlx6sRSU
+Authorization: Bearer eyJyZHMiOiJ0OTlIOCIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEzMzY0MzgwLCJleHAiOjE3MTM0MDAzODB9.oEzHW7A_2Bw_6Urxh3Dfq5sw-2gwu48kxCbhJoK3J8c
 
 {
   "bucketName": "bucket3"
