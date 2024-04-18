@@ -1,3 +1,12 @@
+POST http://localhost:8080/api/auth/login-in-dev
+Content-Type: application/json
+
+{
+  "authKey": "auth-key-test"
+}
+
+###
+
 GET http://localhost:8080/api/buckets
 Content-Type: application/json
-Authorization: Bearer eyJyZHMiOiJuelkxSyIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEyODM4ODYzLCJleHAiOjE3MTI4NzQ4NjN9.t8EIY1PRRPUfsTNlJ9Na7yUN7xOAsvWluamGlx6sRSU
+Authorization: Bearer eyJyZHMiOiJtazNpYyIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEzNDM2OTAwLCJleHAiOjE3MTM0NzI5MDB9.Pp7leKTRcLkecfYP-GcHcxQdjhvDX6UHJ7mH4rhHx2Q

@@ -38,8 +38,8 @@ public class BucketReaderV1 implements BucketReader {
 		return Projections.constructor(
 			BucketReadModel.class,
 			bucket.id,
-			bucket.memberId,
 			bucket.bucketName,
+			bucket.memberId,
 			bucket.createdAt,
 			bucket.modifiedAt
 		);
