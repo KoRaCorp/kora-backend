@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import corp.kora.api.auth.application.AuthKakaoLoginProcessor;
 import corp.kora.api.auth.presentation.request.AuthKakaoLoginRequest;
 import corp.kora.api.auth.presentation.response.AuthKakaoLoginResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,7 +22,7 @@ public class AuthKakaoLoginController {
 	@GetMapping("/api/auth/kakao/login")
 	@ResponseStatus(HttpStatus.OK)
 	public AuthKakaoLoginResponse login(
-		AuthKakaoLoginRequest request
+		@Valid AuthKakaoLoginRequest request
 	) {
 		return authKakaoLoginProcessor.execute(request.code());
 	}

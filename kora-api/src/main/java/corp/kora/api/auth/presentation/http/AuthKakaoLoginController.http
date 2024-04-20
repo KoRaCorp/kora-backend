@@ -1,6 +1,2 @@
-POST http://localhost:8080/api/auth/kakao/login
+GET http://localhost:8080/api/auth/kakao/login?code=test-code
 Content-Type: application/json
-
-{
-  "code": "test-code"
-}
