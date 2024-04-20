@@ -1,0 +1,12 @@
+POST http://localhost:8080/api/auth/login-in-dev
+Content-Type: application/json
+
+{
+  "authKey": "auth-key-test"
+}
+
+###
+
+GET http://localhost:8080/api/members/me
+Content-Type: application/json
+Authorization: Bearer eyJyZHMiOiJTc3h6aSIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIxIiwiaWF0IjoxNzEzNTc5MjA0LCJleHAiOjE3MTM2MTUyMDR9.H6nyP7JdvBdXwzC75ImwzB0xWyfOL1ZXH1vc0jHot2Y

@@ -36,7 +36,9 @@ import corp.kora.api.bucket.presentation.controller.BucketCreateController;
 import corp.kora.api.bucket.presentation.controller.BucketDeleteController;
 import corp.kora.api.bucket.presentation.controller.BucketReadAllByMeController;
 import corp.kora.api.member.application.MemberReadByIdManager;
+import corp.kora.api.member.application.MemberReadMeManager;
 import corp.kora.api.member.presentation.controller.MemberReadByIdController;
+import corp.kora.api.member.presentation.controller.MemberReadMeController;
 import corp.kora.auth.domain.provider.TokenProvider;
 
 @WebMvcTest(controllers = {
@@ -46,7 +48,8 @@ import corp.kora.auth.domain.provider.TokenProvider;
 	BucketCreateController.class,
 	BucketDeleteController.class,
 	BucketChangeBucketNameController.class,
-	BucketReadAllByMeController.class
+	BucketReadAllByMeController.class,
+	MemberReadMeController.class
 })
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
@@ -91,6 +94,9 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected BucketReadAllByMeManager bucketReadAllByMeManager;
+
+	@MockBean
+	protected MemberReadMeManager memberReadMeManager;
 
 	protected FieldDescriptor[] objectDataResponseFields = {
 		PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태코드"),
